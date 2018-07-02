@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "860267230844",
+    "firebase_url": "https://gestion-locative-b47af.firebaseio.com",
+    "project_id": "gestion-locative-b47af",
+    "storage_bucket": "gestion-locative-b47af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860267230844:android:93965fc1fe18054e",
+        "android_client_info": {
+          "package_name": "com.example.ala.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860267230844-6jb5m90oh9325mks17ihsopqr5e2qb18.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY6Qj50uR0IqFmSzdg32t6NkY3_UP8vl4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
