@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import com.example.ala.myapplication.database.AppDatabase;
 
 public class Calendar_Activity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener  {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

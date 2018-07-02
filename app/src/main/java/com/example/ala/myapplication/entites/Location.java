@@ -6,7 +6,9 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity(tableName = "location",foreignKeys =
@@ -87,11 +89,9 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location{" +
-                "lid=" + lid +
-                ", dateDebut=" + dateDebut +
-                ", dateFin=" + dateFin +
-                ", locataire='" + locataire + '\'' +
-                '}';
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
+
+        return "Du "+format.format(dateDebut)+
+                " à " + format.format(dateFin);
     }
 }

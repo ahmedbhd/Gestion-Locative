@@ -16,17 +16,17 @@
         <activity
             android:name=".Calendar_Activity"
             android:label="@string/title_activity_calendar_">
-
-        </activity>
-        <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme">
+
         </activity>
     </application>
 
