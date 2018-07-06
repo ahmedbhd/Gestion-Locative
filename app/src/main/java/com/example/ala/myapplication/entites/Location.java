@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.text.SimpleDateFormat;
@@ -11,8 +12,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-@Entity(tableName = "location",foreignKeys =
-@ForeignKey(entity=Locataire.class,parentColumns = "locataire_id",childColumns = "locataire"))
+@Entity(foreignKeys = {
+        @ForeignKey(entity = Locataire.class,
+                parentColumns = "locataire_id",
+                childColumns = "locataire",
+                onDelete = ForeignKey.CASCADE)},
+        indices = {@Index(value = "locataire")
+        })
 public class Location {
     @PrimaryKey(autoGenerate = true)
     private int lid;

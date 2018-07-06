@@ -4,7 +4,7 @@
     <string name="title_activity_calendar_">Calendar_Activity</string>
     <string name="title_calendar">Calendrier</string>
     <string name="title_location">Location</string>
-    <string name="title_locataire">Locataire</string>
+    <string name="title_paiement">Paiement</string>
     <string name="ajouter_location">Ajouter Location</string>
 
     <!-- TODO: Remove or change this placeholder text -->

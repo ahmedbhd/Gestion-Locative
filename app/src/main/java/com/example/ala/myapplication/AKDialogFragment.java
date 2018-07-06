@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,16 +15,64 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class AKDialogFragment extends DialogFragment {
     private static final String TAG = "AKDialogFragment";
+    private int hours = 25,minutes,day,month=13,year;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//            getActivity().getFragmentManager().beginTransaction().add(this.getTargetFragment(), "dialog").commit();
+//        else
+//            getChildFragmentManager().beginTransaction().add(dialogFrag,"dialog").commit();
         View rootView = inflater.inflate(R.layout.dialog_ak, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        Toolbar toolbar = rootView.findViewById(R.id.toolbar);
+        Button timepickerbtn = rootView.findViewById(R.id.timepicker);
+        Button datepickerbtn = rootView.findViewById(R.id.datepicker);
+
+        timepickerbtn.setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            new android.app.TimePickerDialog(
+                    getActivity(),
+                    (view1, hour, minute) -> {
+                        hours=hour;minutes=minute;
+                        timepickerbtn.setText(new StringBuilder().append(hours).append(":").append(minutes).toString());
+                        if(month!=13)
+                                Log.e("Date : ",""+day+"/"+month+"/"+year+" "+hours+":"+minutes);
+                    },
+                    now.get(Calendar.HOUR_OF_DAY),
+                    now.get(Calendar.MINUTE),
+                    true
+
+            ).show();
+    });
+
+        datepickerbtn.setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            new android.app.DatePickerDialog(
+                    getActivity(),
+                    (view12, year, month, dayOfMonth) -> {
+                        this.year=year;this.month=month;this.day=dayOfMonth;
+                        datepickerbtn.setText(new StringBuilder().append(dayOfMonth).append("/").append(month+1).append("/").append(year).toString());
+                        if(hours!=25) {
+                            Date selectedDate = new GregorianCalendar(this.year, this.month, this.day, this.hours, this.minutes).getTime();
+                            Log.e("Date : ", selectedDate.toString());
+                        }
+                    },
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH)
+            ).show();
+        });
+
         toolbar.setTitle("Ajouter Location");
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -69,4 +118,5 @@ public class AKDialogFragment extends DialogFragment {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

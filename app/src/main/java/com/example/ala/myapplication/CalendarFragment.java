@@ -4,13 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -33,14 +30,14 @@ public class CalendarFragment extends Fragment {
         final TextView selectedEvent = (TextView) mainTabView.findViewById(R.id.locataire);
 //        ajouterLocation = mainTabView.findViewById(R.id.add_location);
 //        ajouterPaiement = mainTabView.findViewById(R.id.add_paiement);
-        Button ajouterLocation = mainTabView.findViewById(R.id.add_location);
-        ajouterLocation.setOnClickListener((view) -> {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            AKDialogFragment newFragment = new AKDialogFragment();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
-        });
+//        Button ajouterLocation = mainTabView.findViewById(R.id.add_location);
+//        ajouterLocation.setOnClickListener((view) -> {
+//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//            AKDialogFragment newFragment = new AKDialogFragment();
+//            FragmentTransaction transaction = fragmentManager.beginTransaction();
+//            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
+//        });
         Date date= new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

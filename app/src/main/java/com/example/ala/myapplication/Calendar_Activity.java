@@ -49,14 +49,10 @@ public class Calendar_Activity extends AppCompatActivity implements BottomNaviga
             case R.id.navigation_location:
                 fragment = new LocationFragment();
                 break;
-//
-//            case R.id.navigation_notifications:
-//                fragment = new NotificationsFragment();
-//                break;
-//
-//            case R.id.navigation_profile:
-//                fragment = new ProfileFragment();
-//                break;
+
+            case R.id.navigation_paiement:
+                fragment = new PaiementFragment();
+                break;
         }
 
         return loadFragment(fragment);

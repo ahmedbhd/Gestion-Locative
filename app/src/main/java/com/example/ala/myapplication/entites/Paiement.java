@@ -11,9 +11,9 @@ import java.util.Objects;
 @Entity(foreignKeys = {
         @ForeignKey(entity = Location.class,
                 parentColumns = "lid",
-                childColumns = "locationID",
+                childColumns = "location_id",
                 onDelete = ForeignKey.CASCADE)},
-        indices = {@Index(value = "locationID")
+        indices = {@Index(value = "location_id")
         })
 public class Paiement {
     @PrimaryKey(autoGenerate = true)

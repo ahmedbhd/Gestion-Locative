@@ -11,12 +11,14 @@ import android.support.annotation.VisibleForTesting;
 import com.example.ala.myapplication.converters.DateConverter;
 import com.example.ala.myapplication.dao.LocataireDAO;
 import com.example.ala.myapplication.dao.LocationDAO;
+import com.example.ala.myapplication.dao.PaiementDAO;
 import com.example.ala.myapplication.entites.Locataire;
 import com.example.ala.myapplication.entites.Location;
+import com.example.ala.myapplication.entites.Paiement;
 
 import static com.example.ala.myapplication.database.AppDatabase.DATABASE_VERSION;
 
-@Database(entities = {Location.class, Locataire.class}, version = DATABASE_VERSION)
+@Database(entities = {Location.class, Locataire.class, Paiement.class}, version = DATABASE_VERSION)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -24,10 +26,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
     @VisibleForTesting
     public static final String DATABASE_NAME = "location-db";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 6; // Locataire FK Added v6
 
     public abstract LocationDAO locationDAO();
     public abstract LocataireDAO locataireDAO();
+    public abstract PaiementDAO paiementDAO();
 
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
 

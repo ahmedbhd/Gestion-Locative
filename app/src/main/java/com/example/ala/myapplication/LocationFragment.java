@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,6 +47,8 @@ public class LocationFragment extends Fragment {
 
     ListView listLocations;
 
+    FloatingActionButton ajouterLocation;
+
     List<Location> locations = new ArrayList<>();
     ArrayAdapter adapter;
 
@@ -56,11 +62,21 @@ public class LocationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.fragment_location, container, false);
         compositeDisposable = new CompositeDisposable();
         listLocations = mainView.findViewById(R.id.listLocations);
+        ajouterLocation = mainView.findViewById(R.id.addLocation);
+
+        ajouterLocation.setOnClickListener(view -> {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            AKDialogFragment newFragment = new AKDialogFragment();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
+        });
+
         adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, locations);
         registerForContextMenu(listLocations);
         listLocations.setAdapter(adapter);
@@ -97,6 +113,7 @@ public class LocationFragment extends Fragment {
         // Set Message
         TextView msg = new TextView(getContext());
         // Message Properties
+        msg.setTypeface(null,1);
         msg.setText("Nom : "+nom+"\nCIN : "+cin+"\n");
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
         msg.setTextColor(Color.BLACK);
@@ -104,6 +121,12 @@ public class LocationFragment extends Fragment {
 
         // Set Button
         // you can more buttons
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Modifier", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Perform Action on Button
+//                TODO: Dialog de mofication
+            }
+        });
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"Appeler", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Perform Action on Button
@@ -112,7 +135,7 @@ public class LocationFragment extends Fragment {
             }
         });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Annuler", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Supprimer", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Perform Action on Button
                 alertDialog.dismiss();
@@ -120,6 +143,13 @@ public class LocationFragment extends Fragment {
         });
 
         new Dialog(getContext());
+        alertDialog.setOnShowListener( (arg0) ->{
+            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_local_phone_black_24dp,0,0,0);
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_forever_black_24dp,0,0,0);
+            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.colorAccent));
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorDelete));
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLUE);
+            });
         alertDialog.show();
     }
 
@@ -128,8 +158,7 @@ public class LocationFragment extends Fragment {
 
         Disposable disposable = locationRepository.getAll().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(locations ->
-                        onGetAllLocationSuccess(locations),
+                .subscribe(this::onGetAllLocationSuccess,
                         throwable -> {
                             Toast.makeText(getContext(), ""+throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }
