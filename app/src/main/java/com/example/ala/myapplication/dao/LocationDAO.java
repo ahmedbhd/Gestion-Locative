@@ -18,6 +18,9 @@ public interface LocationDAO {
     @Query("SELECT * FROM location")
     Flowable<List<Location>> getAll();
 
+    @Query("SELECT * FROM location")
+    List<Location> getAllasList();
+
     @Query("SELECT * FROM location WHERE lid = :locationid")
     Flowable<Location> findById(int locationid);
 

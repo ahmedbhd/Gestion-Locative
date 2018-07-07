@@ -33,17 +33,69 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Du" />
+
         <Button
             android:id="@+id/timepicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time Picker" />
+            android:drawableLeft="@drawable/ic_time_black_24dp"
+            android:text="Choisir l'heure" />
 
         <Button
             android:id="@+id/datepicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date Picker" />
+            android:drawableLeft="@drawable/ic_date_range_black_24dp"
+            android:text="Choisir la date du début" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A" />
+
+        <Button
+            android:id="@+id/todatepicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_date_range_black_24dp"
+            android:text="Choisir la date du fin" />
+
+        <EditText
+            android:id="@+id/cin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:maxLength="8"
+            android:inputType="number"
+            android:hint="CIN" />
+        <EditText
+            android:id="@+id/nom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Nom et Prénom" />
+        <EditText
+            android:id="@+id/telephone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone"
+            android:hint="Telephone" />
+
+        <Button
+            android:id="@+id/add_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:textColor="#FFF"
+            android:text="Ajouter" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

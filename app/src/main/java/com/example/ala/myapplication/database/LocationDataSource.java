@@ -30,6 +30,11 @@ public class LocationDataSource implements ILocationDataSource {
     }
 
     @Override
+    public List<Location> getAllasList() {
+        return locationDAO.getAllasList();
+    }
+
+    @Override
     public Flowable<Location> findById(int locationid) {
         return locationDAO.findById(locationid);
     }

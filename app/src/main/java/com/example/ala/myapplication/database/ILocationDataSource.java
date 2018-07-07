@@ -8,6 +8,7 @@ import io.reactivex.Flowable;
 
 public interface ILocationDataSource {
     Flowable<List<Location>> getAll();
+    List<Location> getAllasList();
     Flowable<Location> findById(int locationid);
     void insert(Location... locations);
     void update(Location... locations);

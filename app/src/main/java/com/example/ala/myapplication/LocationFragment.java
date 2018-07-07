@@ -121,13 +121,22 @@ public class LocationFragment extends Fragment {
 
         // Set Button
         // you can more buttons
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Modifier", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Modifier", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Perform Action on Button
 //                TODO: Dialog de mofication
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                UpdateDialogFragment newFragment = new UpdateDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("location_id", location.getLid());
+                bundle.putInt("locataire_id", location.getLocataire());
+                newFragment.setArguments(bundle);
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
             }
         });
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"Appeler", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Appeler", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Perform Action on Button
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
@@ -135,20 +144,21 @@ public class LocationFragment extends Fragment {
             }
         });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Supprimer", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"Supprimer", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Perform Action on Button
+                locationRepository.delete(location);
                 alertDialog.dismiss();
             }
         });
 
         new Dialog(getContext());
         alertDialog.setOnShowListener( (arg0) ->{
-            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_local_phone_black_24dp,0,0,0);
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_forever_black_24dp,0,0,0);
-            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.colorAccent));
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorDelete));
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLUE);
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_local_phone_black_24dp,0,0,0);
+            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete_forever_black_24dp,0,0,0);
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorGreen));
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.colorDelete));
             });
         alertDialog.show();
     }

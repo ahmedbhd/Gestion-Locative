@@ -29,6 +29,11 @@ public class LocationRepository implements ILocationDataSource {
     }
 
     @Override
+    public List<Location> getAllasList() {
+        return mLocalDataSource.getAllasList();
+    }
+
+    @Override
     public Flowable<Location> findById(int locationid) {
         return mLocalDataSource.findById(locationid);
     }

@@ -10,6 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.ala.myapplication.database.AppDatabase;
+import com.example.ala.myapplication.database.LocataireDataSource;
+import com.example.ala.myapplication.database.LocataireRepository;
+import com.example.ala.myapplication.database.LocationDataSource;
+import com.example.ala.myapplication.database.LocationRepository;
+import com.example.ala.myapplication.entites.Locataire;
+import com.example.ala.myapplication.entites.Location;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
@@ -19,25 +26,14 @@ import java.util.List;
 import java.util.Locale;
 
 public class CalendarFragment extends Fragment {
-//    Button ajouterLocation;
-//    Button ajouterPaiement;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mainTabView = inflater.inflate(R.layout.fragment_calendar, null);
-        final CompactCalendarView compactCalendarView = (CompactCalendarView) mainTabView.findViewById(R.id.compactcalendar_view);
-        final TextView currentMonth = (TextView) mainTabView.findViewById(R.id.currentMonth);
-        final TextView selectedEvent = (TextView) mainTabView.findViewById(R.id.locataire);
-//        ajouterLocation = mainTabView.findViewById(R.id.add_location);
-//        ajouterPaiement = mainTabView.findViewById(R.id.add_paiement);
-//        Button ajouterLocation = mainTabView.findViewById(R.id.add_location);
-//        ajouterLocation.setOnClickListener((view) -> {
-//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//            AKDialogFragment newFragment = new AKDialogFragment();
-//            FragmentTransaction transaction = fragmentManager.beginTransaction();
-//            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//            transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
-//        });
+        CompactCalendarView compactCalendarView = mainTabView.findViewById(R.id.compactcalendar_view);
+        final TextView currentMonth = mainTabView.findViewById(R.id.currentMonth);
+        final TextView selectedEvent = mainTabView.findViewById(R.id.locataire);
         Date date= new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -49,21 +45,30 @@ public class CalendarFragment extends Fragment {
         currentMonth.setText(thisMonthsDate);
 
         compactCalendarView.setUseThreeLetterAbbreviation(false);
-        Date d = new Date(1530276859000L);
-        Log.e("Date : ",d.toString());
-        Event ev1 = new Event(Color.RED, 1530276859000L, "Some extra data that I want to store.");
-        compactCalendarView.addEvent(ev1);
+        AppDatabase appDatabase = AppDatabase.getInstance(getContext());
+        LocationRepository locationRepository = LocationRepository.getInstance(LocationDataSource.getInstance(appDatabase.locationDAO()));
+        LocataireRepository locataireRepository = LocataireRepository.getInstance(LocataireDataSource.getInstance(appDatabase.locataireDAO()));
+        List<Location> locations = locationRepository.getAllasList();
+        //TODO: events
+        for(Location location : locations){
+            Locataire locataire = locataireRepository.findById(location.getLocataire()).blockingFirst();
+            Event event = new Event(Color.RED, location.getDateDebut().getTime(),locataire.getNom());
+            compactCalendarView.addEvent(event);
+        }
+        //        Date d = new Date(1530276859000L);
+//        Event ev1 = new Event(Color.RED, 1530276859000L, "Some extra data that I want to store.");
+//        compactCalendarView.addEvent(ev1);
         // define a listener to receive callbacks when certain events happen.
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
+                selectedEvent.setText("");
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
                 if(!events.isEmpty()){
-                    selectedEvent.setText(events.get(0).getData().toString());
+                    for (Event e : events) selectedEvent.setText(selectedEvent.getText()+e.getData().toString()+"\n");
                 }
                 else{
-                    Log.e("tag", "Empty Day");
-                    selectedEvent.setText("");
+                    Log.e("tag", "Diponible");
                 }
             }
 

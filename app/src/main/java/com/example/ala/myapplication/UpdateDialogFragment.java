@@ -32,14 +32,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class AKDialogFragment extends DialogFragment  {
+public class UpdateDialogFragment extends DialogFragment  {
     private static final String TAG = "AKDialogFragment";
     private int hours = 25,minutes,day,month=13,year;
     private int today,tomonth=13,toyear;
     Date toselectedDate,selectedDate;
     private DatePickerDialog dpd;
     Button todatepickerbtn;
-    Button ajouterLocation;
+    Button modifierLocation;
+    int location_id = 0;
+    int locataire_id = 0;
+    Locataire locataire;
+    Location location;
+    EditText cin,nom,telephone;
+    private LocataireRepository locataireRepository;
+    private LocationRepository locationRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,14 +56,64 @@ public class AKDialogFragment extends DialogFragment  {
 //            getChildFragmentManager().beginTransaction().add(dialogFrag,"dialog").commit();
         View rootView = inflater.inflate(R.layout.dialog_ak, container, false);
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            location_id = bundle.getInt("location_id");
+            locataire_id = bundle.getInt("locataire_id");
+        }
+
+        AppDatabase appDatabase = AppDatabase.getInstance(getContext());
+        locataireRepository = LocataireRepository.getInstance(LocataireDataSource.getInstance(appDatabase.locataireDAO()));
+        locationRepository = LocationRepository.getInstance(LocationDataSource.getInstance(appDatabase.locationDAO()));
+        locataire = locataireRepository.findById(locataire_id).blockingFirst();
+        location = locationRepository.findById(location_id).blockingFirst();
+
         Toolbar toolbar = rootView.findViewById(R.id.toolbar);
         Button timepickerbtn = rootView.findViewById(R.id.timepicker);
         Button datepickerbtn = rootView.findViewById(R.id.datepicker);
         todatepickerbtn = rootView.findViewById(R.id.todatepicker);
-        ajouterLocation = rootView.findViewById(R.id.add_location);
-        EditText cin = rootView.findViewById(R.id.cin);
-        EditText nom = rootView.findViewById(R.id.nom);
-        EditText telephone = rootView.findViewById(R.id.telephone);
+        modifierLocation = rootView.findViewById(R.id.add_location);
+        modifierLocation.setVisibility(View.GONE);
+        cin = rootView.findViewById(R.id.cin);
+        nom = rootView.findViewById(R.id.nom);
+        telephone = rootView.findViewById(R.id.telephone);
+
+        cin.setText(locataire.getCin());
+        nom.setText(locataire.getNom());
+        telephone.setText(locataire.getTelephone());
+        selectedDate = location.getDateDebut();
+        toselectedDate = location.getDateFin();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(location.getDateDebut());
+        hours=calendar.get(Calendar.HOUR);
+        minutes=calendar.get(Calendar.MINUTE);
+        month=calendar.get(Calendar.MONTH);
+        day=calendar.get(Calendar.DAY_OF_MONTH);
+        year=calendar.get(Calendar.YEAR);
+        timepickerbtn.setText(
+                new StringBuilder()
+                        .append(hours)
+                        .append(":").append(minutes)
+                        .toString()
+        );
+        datepickerbtn.setText(
+                new StringBuilder()
+                        .append(day)
+                        .append("/").append(month)
+                        .append("/").append(year)
+                        .toString()
+        );
+        calendar.setTime(location.getDateFin());
+        tomonth=calendar.get(Calendar.MONTH);
+        today=calendar.get(Calendar.DAY_OF_MONTH);
+        toyear=calendar.get(Calendar.YEAR);
+        todatepickerbtn.setText(
+                new StringBuilder()
+                        .append(today)
+                        .append("/").append(tomonth)
+                        .append("/").append(toyear)
+                        .toString()
+        );
 
         timepickerbtn.setOnClickListener(view -> {
             Calendar now = Calendar.getInstance();
@@ -66,8 +123,8 @@ public class AKDialogFragment extends DialogFragment  {
                         hours=hour;minutes=minute;
                         timepickerbtn.setText(new StringBuilder().append(hours).append(":").append(minutes).toString());
                         if(month!=13) {
-                            Log.e("Date : ", "" + day + "/" + month + "/" + year + " " + hours + ":" + minutes);
                             selectedDate = new GregorianCalendar(year, month, day, hours, minutes).getTime();
+                            toselectedDate = new GregorianCalendar(toyear, tomonth, today, hours, minutes).getTime();
                         }
                     },
                     now.get(Calendar.HOUR_OF_DAY),
@@ -109,30 +166,7 @@ public class AKDialogFragment extends DialogFragment  {
             ).show();
         });
 
-        ajouterLocation.setOnClickListener(view -> {
-            Location location = new Location();
-            Log.e("Dat:",new StringBuilder().append(new Date(selectedDate.getTime())).toString());
-            location.setDateDebut(new Date(selectedDate.getTime()));
-            location.setDateFin(new Date (toselectedDate.getTime()));
-            Locataire locataire = new Locataire();
-            locataire.setCin(cin.getText().toString());
-            locataire.setNom(nom.getText().toString());
-            locataire.setTelephone(telephone.getText().toString());
-            // persist locataire
-            AppDatabase appDatabase = AppDatabase.getInstance(getContext());
-            LocataireRepository locataireRepository = LocataireRepository.getInstance(LocataireDataSource.getInstance(appDatabase.locataireDAO()));
-            locataireRepository.insert(locataire);
-            locataire = locataireRepository.findByCIN(cin.getText().toString()).blockingFirst();
-            //persist location
-            location.setLocataire(locataire.getLocataire_id());
-            LocationRepository locationRepository = LocationRepository.getInstance(LocationDataSource.getInstance(appDatabase.locationDAO()));
-            locationRepository.insert(location);
-            // TOAST
-            Toast.makeText(getContext(), "Location Crée !", Toast.LENGTH_LONG).show();
-            dismiss();
-        });
-
-        toolbar.setTitle("Ajouter Location");
+        toolbar.setTitle("Modifier Location");
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -144,6 +178,20 @@ public class AKDialogFragment extends DialogFragment  {
         }
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+    public void modifierLocation(){
+        locataire.setCin(cin.getText().toString());
+        locataire.setNom(nom.getText().toString());
+        locataire.setTelephone(telephone.getText().toString());
+        locataireRepository.update(locataire);
+
+        location.setDateDebut(new Date(selectedDate.getTime()));
+        location.setDateFin(new Date (toselectedDate.getTime()));
+        locationRepository.update(location);
+
+        Toast.makeText(getContext(), "Location Modifiée !", Toast.LENGTH_LONG).show();
+        dismiss();
     }
 
     @NonNull
@@ -166,7 +214,7 @@ public class AKDialogFragment extends DialogFragment  {
 
         if (id == R.id.action_save) {
             // handle confirmation button click here
-            ajouterLocation.performClick();
+            modifierLocation();
             return true;
         } else if (id == android.R.id.home) {
             // handle close button click here

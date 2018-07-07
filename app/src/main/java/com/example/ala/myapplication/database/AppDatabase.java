@@ -39,6 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
                     sInstance = Room.databaseBuilder(context,AppDatabase.class,DATABASE_NAME)
+                            .allowMainThreadQueries() //Cannot access database on the main thread since it may potentially lock the UI for a long period of time
                             .fallbackToDestructiveMigration()
                             .build();
                 }
