@@ -21,7 +21,7 @@ public interface PaiementDAO {
     @Query("SELECT * FROM paiement WHERE pid = :paiementid")
     Flowable<Paiement> findById(int paiementid);
 
-    @Query("SELECT * FROM paiement WHERE location_id = :locationid")
+    @Query("SELECT * FROM paiement WHERE locationID = :locationid")
     Flowable<Paiement> findBylocationID(int locationid);
 
     @Insert

@@ -11,9 +11,9 @@ import java.util.Objects;
 @Entity(foreignKeys = {
         @ForeignKey(entity = Location.class,
                 parentColumns = "lid",
-                childColumns = "location_id",
+                childColumns = "locationID",
                 onDelete = ForeignKey.CASCADE)},
-        indices = {@Index(value = "location_id")
+        indices = {@Index(value = "locationID")
         })
 public class Paiement {
     @PrimaryKey(autoGenerate = true)
@@ -25,7 +25,6 @@ public class Paiement {
     @ColumnInfo(name = "type")
     private String type;
 
-    @ColumnInfo(name = "location_id")
     private int locationID;
 
     public Paiement() {
@@ -85,6 +84,7 @@ public class Paiement {
                 "pid=" + pid +
                 ", montant=" + montant +
                 ", type='" + type + '\'' +
+                ", locationID=" + locationID +
                 '}';
     }
 }

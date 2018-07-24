@@ -95,9 +95,9 @@ public class Location {
 
     @Override
     public String toString() {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE);
+        SimpleDateFormat format = new SimpleDateFormat("EEE dd MMMM HH:mm", Locale.FRANCE);
 
-        return "Du "+format.format(dateDebut)+
+        return format.format(dateDebut)+
                 " à " + format.format(dateFin);
     }
 }

@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import es.dmoral.toasty.Toasty;
+
 public class UpdateDialogFragment extends DialogFragment  {
     private static final String TAG = "AKDialogFragment";
     private int hours = 25,minutes,day,month=13,year;
@@ -39,7 +41,7 @@ public class UpdateDialogFragment extends DialogFragment  {
     Date toselectedDate,selectedDate;
     private DatePickerDialog dpd;
     Button todatepickerbtn;
-    Button modifierLocation;
+    Button SupprimerLocation;
     int location_id = 0;
     int locataire_id = 0;
     Locataire locataire;
@@ -50,10 +52,6 @@ public class UpdateDialogFragment extends DialogFragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-//            getActivity().getFragmentManager().beginTransaction().add(this.getTargetFragment(), "dialog").commit();
-//        else
-//            getChildFragmentManager().beginTransaction().add(dialogFrag,"dialog").commit();
         View rootView = inflater.inflate(R.layout.dialog_ak, container, false);
 
         Bundle bundle = this.getArguments();
@@ -72,8 +70,8 @@ public class UpdateDialogFragment extends DialogFragment  {
         Button timepickerbtn = rootView.findViewById(R.id.timepicker);
         Button datepickerbtn = rootView.findViewById(R.id.datepicker);
         todatepickerbtn = rootView.findViewById(R.id.todatepicker);
-        modifierLocation = rootView.findViewById(R.id.add_location);
-        modifierLocation.setVisibility(View.GONE);
+        SupprimerLocation = rootView.findViewById(R.id.add_location);
+        SupprimerLocation.setText("Supprimer");
         cin = rootView.findViewById(R.id.cin);
         nom = rootView.findViewById(R.id.nom);
         telephone = rootView.findViewById(R.id.telephone);
@@ -164,6 +162,11 @@ public class UpdateDialogFragment extends DialogFragment  {
                     now.get(Calendar.MONTH),
                     now.get(Calendar.DAY_OF_MONTH)
             ).show();
+        });
+        SupprimerLocation.setOnClickListener((View v)->{
+            locationRepository.delete(location);
+            Toasty.error(getContext(), "Location Supprimée.", Toast.LENGTH_SHORT, true).show();
+            dismiss();
         });
 
         toolbar.setTitle("Modifier Location");

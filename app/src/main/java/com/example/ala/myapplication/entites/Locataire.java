@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = "locataire")
+@Entity(tableName = "Locataire")
 public class Locataire {
     @PrimaryKey(autoGenerate = true)
     private int locataire_id;

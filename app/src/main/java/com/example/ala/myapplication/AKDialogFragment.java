@@ -1,5 +1,6 @@
 package com.example.ala.myapplication;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,6 +34,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import es.dmoral.toasty.Toasty;
+
 public class AKDialogFragment extends DialogFragment  {
     private static final String TAG = "AKDialogFragment";
     private int hours = 25,minutes,day,month=13,year;
@@ -43,10 +47,6 @@ public class AKDialogFragment extends DialogFragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-//            getActivity().getFragmentManager().beginTransaction().add(this.getTargetFragment(), "dialog").commit();
-//        else
-//            getChildFragmentManager().beginTransaction().add(dialogFrag,"dialog").commit();
         View rootView = inflater.inflate(R.layout.dialog_ak, container, false);
 
         Toolbar toolbar = rootView.findViewById(R.id.toolbar);
@@ -54,9 +54,47 @@ public class AKDialogFragment extends DialogFragment  {
         Button datepickerbtn = rootView.findViewById(R.id.datepicker);
         todatepickerbtn = rootView.findViewById(R.id.todatepicker);
         ajouterLocation = rootView.findViewById(R.id.add_location);
+        ajouterLocation.setVisibility(View.INVISIBLE); //
         EditText cin = rootView.findViewById(R.id.cin);
+        cin.setError("CIN Invalide");
         EditText nom = rootView.findViewById(R.id.nom);
+        nom.setError("Nom Invalide");
         EditText telephone = rootView.findViewById(R.id.telephone);
+        cin.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                if (cin.getText().toString().trim().length() < 8) {
+                    cin.setError("CIN Invalide");
+                } else {
+                    cin.setError(null);
+                }
+            } else {
+                if (cin.getText().toString().trim().length() < 8) {
+                    cin.setError("CIN Invalide");
+                } else {
+                    // your code here
+                    cin.setError(null);
+                }
+            }
+
+        });
+
+        nom.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                if (nom.getText().toString().trim().length() < 3) {
+                    nom.setError("Nom Invalide");
+                } else {
+                    nom.setError(null);
+                }
+            } else {
+                if (nom.getText().toString().trim().length() < 3) {
+                    nom.setError("Nom Invalide");
+                } else {
+                    // your code here
+                    nom.setError(null);
+                }
+            }
+
+        });
 
         timepickerbtn.setOnClickListener(view -> {
             Calendar now = Calendar.getInstance();
@@ -110,8 +148,13 @@ public class AKDialogFragment extends DialogFragment  {
         });
 
         ajouterLocation.setOnClickListener(view -> {
+            if(cin.getError()!=null||nom.getError()!=null||telephone.getError()!=null)
+                return ;
+            if(selectedDate == null || toselectedDate == null){
+                Toasty.error(getContext(),"Veuillez vérifié la date.",Toast.LENGTH_LONG,true).show();
+                return ;
+            }
             Location location = new Location();
-            Log.e("Dat:",new StringBuilder().append(new Date(selectedDate.getTime())).toString());
             location.setDateDebut(new Date(selectedDate.getTime()));
             location.setDateFin(new Date (toselectedDate.getTime()));
             Locataire locataire = new Locataire();
@@ -127,8 +170,13 @@ public class AKDialogFragment extends DialogFragment  {
             location.setLocataire(locataire.getLocataire_id());
             LocationRepository locationRepository = LocationRepository.getInstance(LocationDataSource.getInstance(appDatabase.locationDAO()));
             locationRepository.insert(location);
+
+            //Hide Keyboard
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
             // TOAST
-            Toast.makeText(getContext(), "Location Crée !", Toast.LENGTH_LONG).show();
+            Toasty.warning(getContext(), "Location Crée!", Toast.LENGTH_SHORT, true).show();
             dismiss();
         });
 

@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     @VisibleForTesting
     public static final String DATABASE_NAME = "location-db";
-    public static final int DATABASE_VERSION = 6; // Locataire FK Added v6
+    public static final int DATABASE_VERSION = 10;
 
     public abstract LocationDAO locationDAO();
     public abstract LocataireDAO locataireDAO();

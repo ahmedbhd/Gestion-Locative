@@ -40,21 +40,21 @@ public class PaiementRepository implements IPaiementDataSource {
 
     @Override
     public void insert(Paiement... paiements) {
-
+        mLocalDataSource.insert(paiements);
     }
 
     @Override
     public void update(Paiement... paiements) {
-
+        mLocalDataSource.update(paiements);
     }
 
     @Override
     public void delete(Paiement paiement) {
-
+        mLocalDataSource.delete(paiement);
     }
 
     @Override
     public void deleteAll() {
-
+        mLocalDataSource.deleteAll();
     }
 }

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.example.ala.myapplication.database.AppDatabase;
+import com.example.ala.myapplication.database.PaiementDataSource;
+import com.example.ala.myapplication.database.PaiementRepository;
 
 public class Calendar_Activity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener  {
     @Override
@@ -16,13 +18,18 @@ public class Calendar_Activity extends AppCompatActivity implements BottomNaviga
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_);
         loadFragment(new CalendarFragment());
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, AppDatabase.DATABASE_NAME).allowMainThreadQueries().build();
-//        db.locationDAO().getAll();
-//        db.locationDAO().insert(new Location(new Date(),new Date(),"ala"));
-
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
+        PaiementRepository paiementRepository = PaiementRepository
+                .getInstance(PaiementDataSource.getInstance(appDatabase.paiementDAO()));
+//        Paiement p = new Paiement();
+//        p.setMontant(500);
+//        p.setType("Avance");
+//        paiementRepository.insert(p);
+//        Log.e("Calendar Act ", "Paiement Crée");
     }
 
     private boolean loadFragment(Fragment fragment) {

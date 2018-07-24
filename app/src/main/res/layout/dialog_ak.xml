@@ -93,7 +93,10 @@
             android:id="@+id/add_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
+            android:background="@color/colorDelete"
+            android:paddingLeft="110dp"
+            android:paddingRight="110dp"
+            android:drawableStart="@drawable/ic_delete_forever_black_24dp"
             android:textColor="#FFF"
             android:text="Ajouter" />
     </LinearLayout>
